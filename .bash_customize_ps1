@@ -25,30 +25,30 @@ export EMOJI_SUNGLASSES="😎"
 # arg3 - time color
 # arg5 - separator color
 function custom_ps1() {
-        local prim_color=""
-        local work_color=""
-        local time_color=""
-        local sep_color=""
-        local emoji="${EMOJI_LAPTOP}"
-        if [ ${CONTAINER_ID+x} ]; then
-                emoji="${EMOJI_CONTAINER}"
-        fi
-        if [ "$EUID" -eq 0 ]; then
-                emoji="${EMOJI_SUNGLASSES}${emoji}"
-        fi
-        if [ -n $1 ]; then
-                prim_color="$1"
-        fi
-        if [ -n $2 ]; then
-                work_color="$2"
-        fi
-        if [ -n $3 ]; then
-                time_color="$3"
-        fi
-        if [ -n $4 ]; then
-                sep_color="$4"
-        fi
-        export PS1="$emoji \
+    local prim_color=""
+    local work_color=""
+    local time_color=""
+    local sep_color=""
+    local emoji="${EMOJI_LAPTOP}"
+    if [ ${CONTAINER_ID+x} ]; then
+        emoji="${EMOJI_CONTAINER}"
+    fi
+    if [ "$EUID" -eq 0 ]; then
+        emoji="${EMOJI_SUNGLASSES}${emoji}"
+    fi
+    if [ -n $1 ]; then
+        prim_color="$1"
+    fi
+    if [ -n $2 ]; then
+        work_color="$2"
+    fi
+    if [ -n $3 ]; then
+        time_color="$3"
+    fi
+    if [ -n $4 ]; then
+        sep_color="$4"
+    fi
+    export PS1="$emoji \
 $prim_color\u \
 $sep_color@$FONT_RESET \
 $prim_color\h \
