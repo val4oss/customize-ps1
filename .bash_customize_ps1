@@ -30,8 +30,10 @@ function custom_ps1() {
     local time_color=""
     local sep_color=""
     local emoji="${EMOJI_LAPTOP}"
+    local machine="\h"
     if [ ${CONTAINER_ID+x} ]; then
         emoji="${EMOJI_CONTAINER}"
+        machine="${CONTAINER_ID}"
     fi
     if [ "$EUID" -eq 0 ]; then
         emoji="${EMOJI_SUNGLASSES}${emoji}"
@@ -51,7 +53,7 @@ function custom_ps1() {
     export PS1="$emoji \
 $prim_color\u \
 $sep_color@$FONT_RESET \
-$prim_color\h \
+$prim_color$machine \
 $sep_color:$FONT_RESET \
 $work_color\w \
 \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\] \
