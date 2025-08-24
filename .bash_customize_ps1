@@ -1,5 +1,7 @@
-export GITAWAREPROMPT=$HOME/.bash/git-aware-prompt
-source "${GITAWAREPROMPT}/main.sh"
+#!/bin/bash
+
+# Symboles
+export GIT_BRANCH=$'\U000E0A0'
 
 export COLOR_BLUE="\[\033[38;5;45m\]"
 export COLOR_GREEN="\[\033[38;5;35m\]"
@@ -18,6 +20,40 @@ export FONT_BOLD="\[$(tput bold)\]"
 export EMOJI_LAPTOP="💻"
 export EMOJI_CONTAINER="📦"
 export EMOJI_SUNGLASSES="😎"
+
+find_git_branch() {
+  # Based on: http://stackoverflow.com/a/13003854/170413
+  local branch
+  if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)\
+      && [[ -n "$branch" ]]; then
+    if [[ "$branch" == "HEAD" ]]; then
+      branch='detached*'
+    fi
+    git_branch=" ${GIT_BRANCH} $branch"
+  else
+    git_branch=""
+  fi
+}
+
+find_git_dirty() {
+  local status=$(git status --porcelain 2> /dev/null)
+  if [[ "$status" != "" ]]; then
+    git_dirty='*'
+  else
+    git_dirty=''
+  fi
+}
+
+find_git_tag() {
+    local tag
+    if tag=$(git describe --tags --abbrev=0 2> /dev/null); then
+        git_tag="$tag"
+    else
+        git_tag=""
+    fi
+}
+
+PROMPT_COMMAND="find_git_branch; find_git_dirty; find_git_tag; $PROMPT_COMMAND"
 
 # Customize PS1 for bash
 # arg1 - user/host color
@@ -56,7 +92,7 @@ $sep_color@$FONT_RESET \
 $prim_color$machine \
 $sep_color:$FONT_RESET \
 $work_color\w \
-\[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\] \
+\[$COLOR_CYAN\]\$git_branch\[$COLOR_RED\]\$git_dirty\[$FONT_RESET\] \
 $sep_color>$FONT_RESET \
 $time_color\T\
 \n\
