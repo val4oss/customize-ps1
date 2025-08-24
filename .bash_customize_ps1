@@ -3,16 +3,28 @@
 # Symboles
 export GIT_BRANCH=$'\U000E0A0'
 
-export COLOR_BLUE="\[\033[38;5;45m\]"
-export COLOR_GREEN="\[\033[38;5;35m\]"
-export COLOR_YELLOW="\[\033[38;5;226m\]"
-export COLOR_PINK="\[\033[38;5;203m\]"
-export COLOR_ORANGE="\[\033[38;5;208m\]"
-export COLOR_RED="\[\033[38;5;1m\]"
-export COLOR_PURPLE="\[\033[38;5;177m\]"
-export COLOR_PURPLE_DEEP="\[\033[38;5;93m\]"
-export COLOR_PURPLE_LIGHT="\[\033[38;5;189m\]"
-
+# See: https://www.ditig.com/256-colors-cheat-sheet
+# Black
+export COLOR_BLACK="\[\033[1m\033[38;5;240m\]"
+# Red
+export COLOR_RED="\[\033[1m\033[38;5;88m\]"
+# Green
+export COLOR_GREEN="\[\033[1m\033[38;5;65m\]"
+# Yellow
+export COLOR_YELLOW="\[\033[1m\033[38;5;142m\]"
+# Blue
+export COLOR_BLUE="\[\033[1m\033[38;5;24m\]"
+# Magenta
+export COLOR_MAGENTA="\[\033[1m\033[38;5;54m\]"
+# Cyan
+export COLOR_CYAN="\[\033[1m\033[38;5;110m\]"
+# White
+export COLOR_WHITE="\[\033[1m\033[38;5;250m\]"
+# Pink
+export COLOR_PINK="\[\033[1m\033[38;5;203m\]"
+# Orange
+export COLOR_ORANGE="\[\033[1m\033[38;5;209m\]"
+# Font
 export FONT_RESET="\[$(tput sgr0)\]"
 export FONT_BOLD="\[$(tput bold)\]"
 
