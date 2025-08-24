@@ -69,13 +69,15 @@ find_git_tag() {
 PROMPT_COMMAND="find_git_branch; find_git_dirty; find_git_tag; $PROMPT_COMMAND"
 
 # Customize PS1 for bash
-# arg1 - user/host color
-# arg2 - workspace color
-# arg3 - time color
+# arg1 - user color
+# arg2 - host color
+# arg3 - workspace color
+# arg4 - time color
 # arg5 - separator color
 function custom_ps1() {
     local header="${EMOJI_DESKTOP_COMPUTER}"
-    local prim_color=""
+    local user_color=""
+    local machine_color=""
     local work_color=""
     local time_color=""
     local sep_color=""
@@ -90,21 +92,24 @@ function custom_ps1() {
         header="${EMOJI_ROOT}${header}"
     fi
     if [ -n $1 ]; then
-        prim_color="$1"
+        user_color="$1"
     fi
     if [ -n $2 ]; then
-        work_color="$2"
+        machine_color="$2"
     fi
     if [ -n $3 ]; then
-        time_color="$3"
+        work_color="$3"
     fi
     if [ -n $4 ]; then
-        sep_color="$4"
+        time_color="$4"
+    fi
+    if [ -n $5 ]; then
+        sep_color="$5"
     fi
     export PS1="\
-$prim_color$header \u \
+$user_color$header \u \
 $sep_color@$FONT_RESET \
-$prim_color$machine \
+$machine_color$machine \
 $sep_color:$FONT_RESET \
 $work_color\w \
 \[$COLOR_CYAN\]\$git_branch\[$COLOR_RED\]\$git_dirty\[$FONT_RESET\] \
