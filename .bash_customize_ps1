@@ -29,12 +29,12 @@ export FONT_RESET="\[$(tput sgr0)\]"
 export FONT_BOLD="\[$(tput bold)\]"
 
 # https://emojipedia.org
-export EMOJI_LAPTOP="💻"
-export EMOJI_CONTAINER="📦"
-export EMOJI_SUNGLASSES="😎"
+# Some emojis need additional space add the end.
+export EMOJI_DESKTOP_COMPUTER=$'\U0001F5A5\U000FE0F '
+export EMOJI_CONTAINER=$'\U0001F4E6'
+export EMOJI_ROOT=$'\U0001F60E'
 
 find_git_branch() {
-  # Based on: http://stackoverflow.com/a/13003854/170413
   local branch
   if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)\
       && [[ -n "$branch" ]]; then
@@ -73,18 +73,18 @@ PROMPT_COMMAND="find_git_branch; find_git_dirty; find_git_tag; $PROMPT_COMMAND"
 # arg3 - time color
 # arg5 - separator color
 function custom_ps1() {
+    local header="${EMOJI_DESKTOP_COMPUTER}"
     local prim_color=""
     local work_color=""
     local time_color=""
     local sep_color=""
-    local emoji="${EMOJI_LAPTOP}"
     local machine="\h"
     if [ ${CONTAINER_ID+x} ]; then
-        emoji="${EMOJI_CONTAINER}"
+        header="${EMOJI_CONTAINER}"
         machine="${CONTAINER_ID}"
     fi
     if [ "$EUID" -eq 0 ]; then
-        emoji="${EMOJI_SUNGLASSES}${emoji}"
+        header="${EMOJI_ROOT}${header}"
     fi
     if [ -n $1 ]; then
         prim_color="$1"
@@ -98,8 +98,8 @@ function custom_ps1() {
     if [ -n $4 ]; then
         sep_color="$4"
     fi
-    export PS1="$emoji \
-$prim_color\u \
+    export PS1="\
+$prim_color$header \u \
 $sep_color@$FONT_RESET \
 $prim_color$machine \
 $sep_color:$FONT_RESET \
