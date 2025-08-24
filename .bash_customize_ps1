@@ -2,6 +2,8 @@
 
 # --- Symboles ---
 export GIT_BRANCH=$'\U000E0A0'
+export ARROW_LEFT=$'\U000E0B2'
+export ARROW_RIGHT=$'\U000E0B0'
 
 # --- Colors ---
 # See: https://www.ditig.com/256-colors-cheat-sheet
@@ -17,6 +19,18 @@ declare -A COLORS=(
     [pink]="\[\033[38;5;203m\]"
     [orange]="\[\033[38;5;209m\]"
     [reset]="\[\033[0m\]"
+)
+declare -A COLORS_BG=(
+    [black]="\[\033[48;5;240m\]"
+    [red]="\[\033[48;5;88m\]"
+    [green]="\[\033[48;5;65m\]"
+    [yellow]="\[\033[48;5;142m\]"
+    [blue]="\[\033[48;5;24m\]"
+    [magenta]="\[\033[48;5;54m\]"
+    [cyan]="\[\033[48;5;110m\]"
+    [white]="\[\033[48;5;250m\]"
+    [pink]="\[\033[48;5;203m\]"
+    [orange]="\[\033[48;5;209m\]"
 )
 declare -A FONTS=(
   [reset]='\[\033[0m\]'
@@ -84,13 +98,20 @@ machine="\h"
 # arg4 - time color
 # arg5 - separator color
 function custom_parse_args() {
+    local caller="${FUNCNAME[1]}"
     local args=("$@")
     local colors=(u_color m_color w_color t_color s_color)
 
     for i in "${!colors[@]}"; do
         local color_name="${args[i]}"
         if [[ -n "$color_name" && -n "${COLORS[$color_name]}" ]]; then
-            declare -g "${colors[i]}"="${COLORS[$color_name]}"
+            if [[ "${caller}" == "custom_ps1" ]]; then
+                declare -g "${colors[i]}"="${COLORS[$color_name]}"
+            elif [[ "${caller}" == "custom_ps1_bg" ]]; then
+                local arrows=(u_arrow m_arrow w_arrow t_arrow s_arrow)
+                declare -g "${colors[i]}"="${COLORS_BG[$color_name]}"
+                declare -g "${arrows[i]}"="${COLORS[$color_name]}${ARROW_RIGHT}"
+            fi
         fi
     done
 
@@ -119,4 +140,18 @@ $s_color>${COLORS[reset]} \
 $t_color\T${COLORS[reset]}\
 \n\
 $sep_color$ ${COLORS[reset]}"
+}
+
+# Customize PS1 with background for bash
+function custom_ps1_bg() {
+    local color_fg="\[\033[38;5;231m\]"
+    custom_parse_args "$@"
+    export PS1="\
+${FONTS[bold]}$u_color$color_fg$header \u${COLORS[reset]}\
+${FONTS[bold]}$m_color$u_arrow$color_fg $machine${COLORS[reset]}\
+$w_color$m_arrow$color_fg \w${COLORS[reset]}\
+\[${COLORS_BG[cyan]}$w_arrow$color_fg\]\$git_branch\[${COLORS[red]}\]\$git_dirty\[${COLORS[reset]}\]\
+$t_color${COLORS[cyan]}${ARROW_RIGHT}$color_fg \T${COLORS[reset]}$t_arrow${COLORS[reset]}\
+\n\
+$ ${COLORS[reset]}"
 }
