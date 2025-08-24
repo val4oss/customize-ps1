@@ -4,26 +4,19 @@
 export GIT_BRANCH=$'\U000E0A0'
 
 # See: https://www.ditig.com/256-colors-cheat-sheet
-# Black
-export COLOR_BLACK="\[\033[1m\033[38;5;240m\]"
-# Red
-export COLOR_RED="\[\033[1m\033[38;5;88m\]"
-# Green
-export COLOR_GREEN="\[\033[1m\033[38;5;65m\]"
-# Yellow
-export COLOR_YELLOW="\[\033[1m\033[38;5;142m\]"
-# Blue
-export COLOR_BLUE="\[\033[1m\033[38;5;24m\]"
-# Magenta
-export COLOR_MAGENTA="\[\033[1m\033[38;5;54m\]"
-# Cyan
-export COLOR_CYAN="\[\033[1m\033[38;5;110m\]"
-# White
-export COLOR_WHITE="\[\033[1m\033[38;5;250m\]"
-# Pink
-export COLOR_PINK="\[\033[1m\033[38;5;203m\]"
-# Orange
-export COLOR_ORANGE="\[\033[1m\033[38;5;209m\]"
+declare -A COLORS=(
+    [black]="\[\033[1m\033[38;5;240m\]"
+    [red]="\[\033[1m\033[38;5;88m\]"
+    [green]="\[\033[1m\033[38;5;65m\]"
+    [yellow]="\[\033[1m\033[38;5;142m\]"
+    [blue]="\[\033[1m\033[38;5;24m\]"
+    [magenta]="\[\033[1m\033[38;5;54m\]"
+    [cyan]="\[\033[1m\033[38;5;110m\]"
+    [white]="\[\033[1m\033[38;5;250m\]"
+    [pink]="\[\033[1m\033[38;5;203m\]"
+    [orange]="\[\033[1m\033[38;5;209m\]"
+)
+
 # Font
 export FONT_RESET="\[$(tput sgr0)\]"
 export FONT_BOLD="\[$(tput bold)\]"
@@ -75,13 +68,18 @@ PROMPT_COMMAND="find_git_branch; find_git_dirty; find_git_tag; $PROMPT_COMMAND"
 # arg4 - time color
 # arg5 - separator color
 function custom_ps1() {
+    local args=("$@")
+    local colors=(u_color m_color w_color t_color s_color)
     local header="${EMOJI_DESKTOP_COMPUTER}"
-    local user_color=""
-    local machine_color=""
-    local work_color=""
-    local time_color=""
-    local sep_color=""
     local machine="\h"
+
+    for i in "${!colors[@]}"; do
+        local color_name="${args[i]}"
+        if [[ -n "$color_name" && -n "${COLORS[$color_name]}" ]]; then
+            declare -g "${colors[i]}"="${COLORS[$color_name]}"
+        fi
+    done
+
     if [ ${CONTAINER_ID+x} ]; then
         header="${EMOJI_CONTAINER}"
         machine="${CONTAINER_ID}"
@@ -91,30 +89,15 @@ function custom_ps1() {
     if [ "$EUID" -eq 0 ]; then
         header="${EMOJI_ROOT}${header}"
     fi
-    if [ -n $1 ]; then
-        user_color="$1"
-    fi
-    if [ -n $2 ]; then
-        machine_color="$2"
-    fi
-    if [ -n $3 ]; then
-        work_color="$3"
-    fi
-    if [ -n $4 ]; then
-        time_color="$4"
-    fi
-    if [ -n $5 ]; then
-        sep_color="$5"
-    fi
     export PS1="\
-$user_color$header \u \
-$sep_color@$FONT_RESET \
-$machine_color$machine \
-$sep_color:$FONT_RESET \
-$work_color\w \
-\[$COLOR_CYAN\]\$git_branch\[$COLOR_RED\]\$git_dirty\[$FONT_RESET\] \
-$sep_color>$FONT_RESET \
-$time_color\T\
+$u_color$header \u \
+$s_color@$FONT_RESET \
+$m_color$machine \
+$s_color:$FONT_RESET \
+$w_color\w \
+\[${COLORS[cyan]}\]\$git_branch\[${COLORS[red]}\]\$git_dirty\[$FONT_RESET\] \
+$s_color>$FONT_RESET \
+$t_color\T\
 \n\
 $sep_color$ $FONT_RESET"
 }
