@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Symboles
+# --- Symboles ---
 export GIT_BRANCH=$'\U000E0A0'
 
+# --- Colors ---
 # See: https://www.ditig.com/256-colors-cheat-sheet
 declare -A COLORS=(
     [black]="\[\033[38;5;240m\]"
@@ -17,7 +18,6 @@ declare -A COLORS=(
     [orange]="\[\033[38;5;209m\]"
     [reset]="\[\033[0m\]"
 )
-
 declare -A FONTS=(
   [reset]='\[\033[0m\]'
   [bold]='\[\033[1m\]'
@@ -29,6 +29,7 @@ declare -A FONTS=(
   [hidden]='\[\033[8m\]'
 )
 
+# ---Emoji ---
 # https://emojipedia.org
 # Some emojis need additional space add the end.
 export EMOJI_DESKTOP_COMPUTER=$'\U0001F5A5\U000FE0F '
@@ -36,6 +37,7 @@ export EMOJI_CONTAINER=$'\U0001F4E6'
 export EMOJI_VM=$'\U0001F5B2\U000FE0 '
 export EMOJI_ROOT=$'\U0001F60E'
 
+# --- git functions ---
 find_git_branch() {
   local branch
   if branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)\
@@ -48,7 +50,6 @@ find_git_branch() {
     git_branch=""
   fi
 }
-
 find_git_dirty() {
   local status=$(git status --porcelain 2> /dev/null)
   if [[ "$status" != "" ]]; then
@@ -57,7 +58,6 @@ find_git_dirty() {
     git_dirty=''
   fi
 }
-
 find_git_tag() {
     local tag
     if tag=$(git describe --tags --abbrev=0 2> /dev/null); then
@@ -66,20 +66,26 @@ find_git_tag() {
         git_tag=""
     fi
 }
-
 PROMPT_COMMAND="find_git_branch; find_git_dirty; find_git_tag; $PROMPT_COMMAND"
 
-# Customize PS1 for bash
+# --- Default prompt colors ---
+u_color="${COLORS[green]}"
+m_color="${COLORS[green]}"
+w_color="${COLORS[blue]}"
+t_color="${COLORS[yellow]}"
+s_color="${COLORS[magenta]}"
+header="${EMOJI_DESKTOP_COMPUTER}"
+machine="\h"
+
+# Parse argument for Customize PS1
 # arg1 - user color
 # arg2 - host color
 # arg3 - workspace color
 # arg4 - time color
 # arg5 - separator color
-function custom_ps1() {
+function custom_parse_args() {
     local args=("$@")
     local colors=(u_color m_color w_color t_color s_color)
-    local header="${EMOJI_DESKTOP_COMPUTER}"
-    local machine="\h"
 
     for i in "${!colors[@]}"; do
         local color_name="${args[i]}"
@@ -97,6 +103,11 @@ function custom_ps1() {
     if [ "$EUID" -eq 0 ]; then
         header="${EMOJI_ROOT}${header}"
     fi
+}
+
+# Customize PS1 for bash
+function custom_ps1() {
+    custom_parse_args "$@"
     export PS1="\
 ${FONTS[bold]}$u_color$header \u${COLORS[reset]} \
 $s_color@${COLORS[reset]} \
@@ -109,4 +120,3 @@ $t_color\T${COLORS[reset]}\
 \n\
 $sep_color$ ${COLORS[reset]}"
 }
-
