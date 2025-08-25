@@ -63,7 +63,7 @@ find_git_branch() {
     if [[ "$branch" == "HEAD" ]]; then
       branch='detached*'
     fi
-    git_branch=" ${GIT_BRANCH} $branch"
+    git_branch="${GIT_BRANCH} $branch"
   else
     git_branch=""
   fi
@@ -78,8 +78,8 @@ find_git_dirty() {
 }
 find_git_tag() {
     local tag
-    if tag=$(git describe --tags --abbrev=0 2> /dev/null); then
-        git_tag="$tag"
+    if tag=$(git describe --tags --long 2> /dev/null); then
+        git_tag="($(echo $tag | sed 's/-g[0-9a-f]\+$//' | sed 's/-/+/'))"
     else
         git_tag=""
     fi
@@ -139,7 +139,8 @@ $s_color@${COLORS[reset]} \
 ${FONTS[bold]}$m_color$machine${COLORS[reset]} \
 $s_color:${COLORS[reset]} \
 $w_color\w${COLORS[reset]} \
-\[${COLORS[cyan]}\]\$git_branch\[${COLORS[red]}\]\$git_dirty\[${COLORS[reset]}\] \
+\[${COLORS[cyan]}\] \$git_branch\$git_tag\
+\[${COLORS[red]}\] \$git_dirty\[${COLORS[reset]}\] \
 $s_color>${COLORS[reset]} \
 $t_color\T${COLORS[reset]}\
 \n\
@@ -154,7 +155,8 @@ function custom_ps1_bg() {
 ${FONTS[bold]}$u_color$color_fg$header \u${COLORS[reset]}\
 ${FONTS[bold]}$m_color$u_arrow$color_fg $machine${COLORS[reset]}\
 $w_color$m_arrow$color_fg \w${COLORS[reset]}\
-\[${COLORS_BG[cyan]}$w_arrow$color_fg\]\$git_branch\[${COLORS[red]}\]\$git_dirty\[${COLORS[reset]}\]\
+\[${COLORS_BG[cyan]}$w_arrow$color_fg\] \$git_branch\$git_tag\
+\[${COLORS[red]}\] \$git_dirty\[${COLORS[reset]}\]\
 $t_color${COLORS[cyan]}${ARROW_RIGHT}$color_fg \T${COLORS[reset]}$t_arrow${COLORS[reset]}\
 \n\
 $ ${COLORS[reset]}"
