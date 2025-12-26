@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 # bash_cusomize_ps1 - Useful Bash to custom PS1 value.
 # Copyright (C) 2025 val4oss <github.widget541@passmail.net>
 #
@@ -66,10 +65,10 @@ declare -A FONTS=(
 # ---Emoji ---
 # https://emojipedia.org
 # Some emojis need additional space add the end.
-export EMOJI_DESKTOP_COMPUTER=$'\U0001F5A5\U000FE0F '
-export EMOJI_CONTAINER=$'\U0001F4E6'
-export EMOJI_VM=$'\U0001F5B2\U000FE0 '
-export EMOJI_ROOT=$'\U0001F60E'
+export EMOJI_DESKTOP_COMPUTER=$'\uf108'
+export EMOJI_CONTAINER=$'\uf1b2'
+export EMOJI_VM=$'\uf233'
+export EMOJI_ROOT=$'\uf17c'
 
 # --- git functions ---
 find_git_branch() {
