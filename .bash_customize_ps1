@@ -149,15 +149,13 @@ function custom_parse_args() {
 function custom_ps1() {
     custom_parse_args "$@"
     export PS1="\
-${FONTS[bold]}$u_color$header \u${COLORS[reset]} \
-$s_color@${COLORS[reset]} \
-${FONTS[bold]}$m_color$machine${COLORS[reset]} \
+$t_color[\T]${COLORS[reset]} \
+${FONTS[bold]}$u_color\u${COLORS[reset]} \
+$m_color$header $machine${COLORS[reset]} \
 $s_color:${COLORS[reset]} \
-$w_color\w${COLORS[reset]} \
+$w_color\w${COLORS[reset]}\
 \[${COLORS[cyan]}\] \$git_branch\$git_tag\
-\[${COLORS[red]}\] \$git_dirty\[${COLORS[reset]}\] \
-$s_color>${COLORS[reset]} \
-$t_color\T${COLORS[reset]}\
+\[${COLORS[red]}\] \$git_dirty\[${COLORS[reset]}\]\
 \n\
 $sep_color$ ${COLORS[reset]}"
 }
@@ -167,12 +165,12 @@ function custom_ps1_bg() {
     local color_fg="\[\033[38;5;231m\]"
     custom_parse_args "$@"
     export PS1="\
-${FONTS[bold]}$u_color$color_fg$header \u${COLORS[reset]}\
-${FONTS[bold]}$m_color$u_arrow$color_fg $machine${COLORS[reset]}\
-$w_color$m_arrow$color_fg \w${COLORS[reset]}\
-\[${COLORS_BG[cyan]}$w_arrow$color_fg\] \$git_branch\$git_tag\
+$t_color$color_fg\T${COLORS[reset]}$u_color$t_arrow${COLORS[reset]}\
+${FONTS[bold]}$u_color$color_fg\u${COLORS[reset]}\
+${FONTS[bold]}$m_color$u_arrow$color_fg$header $machine${COLORS[reset]}\
+$w_color$m_arrow$color_fg \w${COLORS[reset]}$w_arrow\
+\[${COLORS[cyan]}\] \$git_branch\$git_tag\
 \[${COLORS[red]}\] \$git_dirty\[${COLORS[reset]}\]\
-$t_color${COLORS[cyan]}${ARROW_RIGHT}$color_fg \T${COLORS[reset]}$t_arrow${COLORS[reset]}\
 \n\
 $ ${COLORS[reset]}"
 }
