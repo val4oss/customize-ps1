@@ -78,7 +78,9 @@ find_git_branch() {
     if [[ "$branch" == "HEAD" ]]; then
       branch='detached*'
     fi
-    git_branch="${GIT_BRANCH} $branch"
+    git_branch="$branch"
+    [[ "$(locale charmap 2>/dev/null)" == "UTF-8" ]]\
+        && git_branch="${GIT_BRANCH} $git_branch"
   else
     git_branch=""
   fi
@@ -107,7 +109,7 @@ m_color="${COLORS[green]}"
 w_color="${COLORS[blue]}"
 t_color="${COLORS[yellow]}"
 s_color="${COLORS[magenta]}"
-header="${EMOJI_DESKTOP_COMPUTER}"
+header="@"
 machine="\h"
 
 # Parse argument for Customize PS1
@@ -134,15 +136,19 @@ function custom_parse_args() {
         fi
     done
 
-    if [ ${CONTAINER_ID+x} ]; then
-        header="${EMOJI_CONTAINER}"
-        machine="${CONTAINER_ID}"
-    elif systemd-detect-virt --vm -q; then
-        header=${EMOJI_VM}
+    if [[ "$(locale charmap 2>/dev/null)" == "UTF-8" ]]; then
+        header="${EMOJI_DESKTOP_COMPUTER}"
+        if [ ${CONTAINER_ID+x} ]; then
+            header="${EMOJI_CONTAINER}"
+        elif command -v systemd-detect-virt &>/dev/null \
+            && systemd-detect-virt --vm -q; then
+            header=${EMOJI_VM}
+        fi
+        if [ "$EUID" -eq 0 ]; then
+            header="${EMOJI_ROOT}${header}"
+        fi
     fi
-    if [ "$EUID" -eq 0 ]; then
-        header="${EMOJI_ROOT}${header}"
-    fi
+    [[ ${CONTAINER_ID+x} ]] && machine="${CONTAINER_ID}"
 }
 
 # Customize PS1 for bash
