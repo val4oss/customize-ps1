@@ -24,7 +24,7 @@ Provide bash file to custom PS1.
   TIME_COLOR=yellow
   SEPARATOR_COLOR=white
   
-  custom_ps1 $PRIMARY_COLOR $WORKSPACE_COLOR $TIME_COLOR $SEPARATOR_COLOR
+  custom_ps1 $USER_COLOR $MACHINE_COLOR $WORKSPACE_COLOR $TIME_COLOR $SEPARATOR_COLOR
   ```
 
 ## List of colors
